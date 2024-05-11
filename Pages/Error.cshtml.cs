@@ -24,5 +24,4 @@ namespace SupermarketWEB.Pages
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }
-
 }
