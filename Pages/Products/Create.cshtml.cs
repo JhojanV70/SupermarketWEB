@@ -34,4 +34,3 @@ namespace SupermarketWEB.Pages.Products
         }
     }
 }
-

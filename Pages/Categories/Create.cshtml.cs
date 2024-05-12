@@ -26,6 +26,7 @@ namespace SupermarketWEB.Pages.Categories
             if (!ModelState.IsValid || _context.Categories == null || Category == null)
             {
                 return Page();
+
             }
             _context.Categories.Add(Category);
             await _context.SaveChangesAsync();
