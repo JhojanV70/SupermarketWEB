@@ -1,0 +1,66 @@
+﻿@page
+@model SupermarketWEB.Pages.Customers.IndexModel
+@{
+    ViewData["Title"] = "Index Customer";
+}
+<h1>Index Customer</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].Adress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].BirthdayData)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].Description)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Customers)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Adress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthdayData)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
