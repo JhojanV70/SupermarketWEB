@@ -29,7 +29,7 @@ namespace SupermarketWEB.Pages.Details
             {
                 return NotFound();
             }
-            Detail = Detail;
+            this.Detail = Detail;
             return Page();
         }
 
@@ -63,7 +63,7 @@ namespace SupermarketWEB.Pages.Details
 
         private bool DetailExists(int id)
         {
-            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Details?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

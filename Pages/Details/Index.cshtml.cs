@@ -17,7 +17,7 @@ namespace SupermarketWEB.Pages.Details
         public IList<Detail> Details { get; set; } = default!;
         public async Task OnGetAsync()
         {
-            if (_context.Categories != null)
+            if (_context.Details != null)
             {
                 Details = await _context.Details.ToListAsync();
             }
