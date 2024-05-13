@@ -4,31 +4,32 @@ using Microsoft.EntityFrameworkCore;
 using SupermarketWEB.Data;
 using SupermarketWEB.Models;
 
-namespace SupermarketWEB.Pages.Products
+namespace SupermarketWEB.Pages.Details
 {
     public class EditModel : PageModel
     {
         private readonly SupermarketContext _context;
+
         public EditModel(SupermarketContext context)
         {
             _context = context;
         }
         [BindProperty]
-        public Product Product { get; set; } = default!;
+        public Detail Detail { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (id == null || _context.Details == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            var Detail = await _context.Details.FirstOrDefaultAsync(m => m.Id == id);
+            if (Detail == null)
             {
                 return NotFound();
             }
-            Product = product;
+            Detail = Detail;
             return Page();
         }
 
@@ -39,7 +40,7 @@ namespace SupermarketWEB.Pages.Products
                 return Page();
             }
 
-            _context.Attach(Product).State = EntityState.Modified;
+            _context.Attach(Detail).State = EntityState.Modified;
 
             try
             {
@@ -47,7 +48,7 @@ namespace SupermarketWEB.Pages.Products
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(Product.Id))
+                if (!DetailExists(Detail.Id))
                 {
                     return NotFound();
                 }
@@ -60,9 +61,9 @@ namespace SupermarketWEB.Pages.Products
             return RedirectToPage("./Index");
         }
 
-        private bool ProductExists(int id)
+        private bool DetailExists(int id)
         {
-            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
