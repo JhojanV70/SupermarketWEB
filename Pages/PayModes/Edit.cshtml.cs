@@ -6,15 +6,14 @@ using SupermarketWEB.Models;
 
 namespace SupermarketWEB.Pages.PayModes
 {
-    public class DeleteModel : PageModel
+    public class EditModel : PageModel
     {
         private readonly SupermarketContext _context;
 
-        public DeleteModel(SupermarketContext context)
+        public EditModel(SupermarketContext context)
         {
             _context = context;
         }
-
         [BindProperty]
         public PayMode PayMode { get; set; } = default!;
 
@@ -26,34 +25,45 @@ namespace SupermarketWEB.Pages.PayModes
             }
 
             var PayMode = await _context.PayModes.FirstOrDefaultAsync(m => m.Id == id);
-
             if (PayMode == null)
             {
                 return NotFound();
             }
-            else
-            {
-                this.PayMode = PayMode;
-            }
+            this.PayMode = PayMode;
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (id == null || _context.PayModes == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return Page();
             }
-            var PayMode = await _context.PayModes.FindAsync(id);
 
-            if (PayMode != null)
+            _context.Attach(PayMode).State = EntityState.Modified;
+
+            try
             {
-                this.PayMode = PayMode;
-                _context.PayModes.Remove(PayMode);
                 await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PayModeExists(PayMode.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
             return RedirectToPage("./Index");
+        }
+
+        private bool PayModeExists(int id)
+        {
+            return (_context.PayModes?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
