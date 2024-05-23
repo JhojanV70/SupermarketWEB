@@ -8,6 +8,7 @@ namespace SupermarketWEB.Pages.Details
     public class CreateModel : PageModel
     {
         private readonly SupermarketContext _context;
+
         public CreateModel(SupermarketContext context)
         {
             _context = context;
@@ -26,7 +27,6 @@ namespace SupermarketWEB.Pages.Details
             if (!ModelState.IsValid || _context.Details == null || Detail == null)
             {
                 return Page();
-
             }
             _context.Details.Add(Detail);
             await _context.SaveChangesAsync();

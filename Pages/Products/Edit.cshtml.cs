@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SupermarketWEB.Data;
 using SupermarketWEB.Models;
@@ -8,61 +9,96 @@ namespace SupermarketWEB.Pages.Products
 {
     public class EditModel : PageModel
     {
-        private readonly SupermarketContext _context;
-        public EditModel(SupermarketContext context)
-        {
-            _context = context;
-        }
-        [BindProperty]
-        public Product Product { get; set; } = default!;
+		private readonly SupermarketContext _context;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _context.Products == null)
-            {
-                return NotFound();
-            }
+		public EditModel(SupermarketContext context)
+		{
+			_context = context;
+		}
 
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            Product = product;
-            return Page();
-        }
+		public List<SelectListItem> Categories { get; set; }
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+		[BindProperty]
+		public Product Product { get; set; }
 
-            _context.Attach(Product).State = EntityState.Modified;
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(Product.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			Product = await _context.Products.FindAsync(id);
 
-            return RedirectToPage("./Index");
-        }
+			if (Product == null)
+			{
+				return NotFound();
+			}
 
-        private bool ProductExists(int id)
-        {
-            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-    }
+			Categories = await _context.Categories.Select(c =>
+				new SelectListItem
+				{
+					Value = c.Id.ToString(),
+					Text = c.Name,
+					Selected = (c.Id == Product.CategoryId)
+				}).ToListAsync();
+
+			return Page();
+		}
+
+		public async Task<IActionResult> OnPostAsync()
+		{
+			if (!ModelState.IsValid)
+			{
+				Categories = await _context.Categories.Select(c =>
+					new SelectListItem
+					{
+						Value = c.Id.ToString(),
+						Text = c.Name,
+						Selected = (c.Id == Product.CategoryId)
+					}).ToListAsync();
+				return Page();
+			}
+
+			var category = await _context.Categories.FindAsync(Product.CategoryId);
+
+			if (category == null)
+			{
+				ModelState.AddModelError("", "Invalid category selected.");
+				Categories = await _context.Categories.Select(c =>
+					new SelectListItem
+					{
+						Value = c.Id.ToString(),
+						Text = c.Name,
+						Selected = (c.Id == Product.CategoryId)
+					}).ToListAsync();
+				return Page();
+			}
+
+			_context.Attach(Product).State = EntityState.Modified;
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!ProductExists(Product.Id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return RedirectToPage("./Index");
+		}
+
+		private bool ProductExists(int id)
+		{
+			return _context.Products.Any(p => p.Id == id);
+		}
+	}
 }

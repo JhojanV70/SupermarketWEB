@@ -13,11 +13,13 @@ namespace SupermarketWEB.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<PayMode> PayModes { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\mssqllocaldb;Database=SupermarketEF;Trusted_Connection=True;");
+                "Server=(localdb)\\mssqllocaldb;Database=SupermarketWEB;Trusted_Connection=True;");
         }
     }
 }
+
